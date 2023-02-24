@@ -1,0 +1,63 @@
+  ESP32 DEMO
+  Como controlar um Robô móvel de motores de
+  corrente contínua usando o FlySky
+
+*/
+ // Definição das conexões de entrada
+#define CH1 17
+#define CH2 25
+#define CH6 26
+ 
+// Vaiáveis que representam o valor dos canais 1 e 2
+int ch1Value;
+int ch2Value;
+
+// Variável boleana que representa o valor lógico do canal 6
+//deve ser configurado n controle remotor FlySky
+bool ch6Value;
+
+//Função que lê o valor de um canal e a transforma num outro numa faixa definida
+// Se o valor do canal for menor que 100, isto é canal em estado OFF, retorna o valor default
+// O valor de um canal geralmente fica na faixa de 1000 a 2000
+int readChannel(int channelInput, int minLimit, int maxLimit, int defaultValue){
+  int ch = pulseIn(channelInput, HIGH, 30000);
+  if (ch < 100) return defaultValue;
+  return map(ch, 1000, 2000, minLimit, maxLimit);
+}
+ 
+// Read the switch channel and return a boolean value
+  bool readSwitch(byte channelInput, bool defaultValue){
+  int intDefaultValue = (defaultValue)? 100: 0;
+  int ch = readChannel(channelInput, 0, 100, intDefaultValue);
+  return (ch > 50);
+}
+ 
+void setup(){
+  // Configurar a comunicação serial
+  Serial.begin(115200);
+  
+  // Configurar os pinos dos canais como entrada
+  pinMode(CH1, INPUT);
+  pinMode(CH2, INPUT);
+  pinMode(CH6, INPUT);
+}
+ 
+ 
+void loop() {
+  
+  // Obtenção dos valores dos canais dentro da faixa de -100 a 100
+  ch1Value = readChannel(CH1, -100, 100, 0);
+  ch2Value = readChannel(CH2, -100, 100, 0);
+
+  ch6Value = readSwitch(CH6, false);
+  
+  // Enviar a informação dos valores dos canais através da comunicação serial
+  Serial.print("Ch1: ");
+  Serial.print(ch1Value);
+  Serial.print(" | Ch2: ");
+  Serial.print(ch2Value);
+  Serial.print(" | Ch6: ");
+  Serial.println(ch6Value);
+  
+  delay(500);
+}
