@@ -1,0 +1,70 @@
+/*
+Programa Exemplo de como programar um Robô Móvel
+Professor Marco Cuadros
+*/
+ //Define os pinos conectados a ponte H
+int IN1 = 27;
+int IN2 = 16;
+int pinPWMD = 14;
+int IN3 = 4;
+int IN4 = 2;
+int pinPWME = 0;
+
+void setup()
+{
+  Configuracao();
+}
+void loop()
+{
+ //Vai Pra Frente
+ Frente(3000);
+ 
+ GiraSH90();
+
+ //Vai pra trás
+  PraTras(2000);
+}
+
+
+void Configuracao(){
+  //Define os pinos como saida
+ pinMode(IN1, OUTPUT);
+ pinMode(IN2, OUTPUT);
+ pinMode(IN3, OUTPUT);
+ pinMode(IN4, OUTPUT);
+ pinMode(pinPWMD, OUTPUT);
+ pinMode(pinPWME, OUTPUT);
+ //Configuracao da velocidade dos motores - PWM
+  ledcAttachPin(pinPWMD, 0);//Atribuimos o pino 2 ao canal 0.
+  ledcAttachPin(pinPWME, 1);//Atribuimos o pino 2 ao canal 0.
+  ledcSetup(0, 1000, 10);
+  ledcSetup(1, 1000, 10);
+}
+void Frente(int Tempo){
+   ledcWrite(0, 800);
+ ledcWrite(1, 800);
+ digitalWrite(IN1, HIGH);
+ digitalWrite(IN2, LOW);
+ digitalWrite(IN3, HIGH);
+ digitalWrite(IN4, LOW);
+ delay(Tempo);
+}
+void PraTras(int Tempo){
+ ledcWrite(0, 850);
+ ledcWrite(1, 850);
+ digitalWrite(IN1, LOW);
+ digitalWrite(IN2, HIGH);
+ digitalWrite(IN3, LOW); 
+ digitalWrite(IN4, HIGH);
+ delay(Tempo); 
+}
+
+void GiraSH90(){
+ ledcWrite(0, 850);
+ ledcWrite(1, 850);
+ digitalWrite(IN1, LOW);
+ digitalWrite(IN2, HIGH);
+ digitalWrite(IN3, HIGH);
+ digitalWrite(IN4, LOW);
+ delay(500);
+}
